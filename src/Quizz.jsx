@@ -4,6 +4,8 @@ const SUPABASE_URL = 'https://qglyfohuebgbuztjqaok.supabase.co'
 const SUPABASE_KEY =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFnbHlmb2h1ZWJnYnV6dGpxYW9rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyNTgxODQsImV4cCI6MjA5MTgzNDE4NH0.HKqxiTKQDV8zvfpTmE8RlDq_GsbwHATzfn1gyDkJLxQ'
 
+// Les options sont stockées avec la bonne réponse identifiée par `correct: true`
+// Le shuffle se fait au chargement pour chaque question
 const ALL_QUESTIONS = [
   {
     type: 'vf',
@@ -20,7 +22,12 @@ const ALL_QUESTIONS = [
   {
     type: 'qcm',
     q: "L'algorithme LinkedIn construit ton autorité thématique à partir de :",
-    opts: ['Tes 100 dernières interactions', 'Tes 1000 dernières interactions', 'Tes posts uniquement', 'Tes connexions'], c: 1,
+    opts: [
+      { text: "Tes 100 dernières interactions — LinkedIn analyse uniquement ta dernière semaine d'activité", correct: false },
+      { text: "Tes 1000 dernières interactions — LinkedIn lit ta trajectoire complète pour comprendre qui tu es et vers qui te distribuer", correct: true },
+      { text: "Tes posts uniquement — seul le contenu que tu publies est pris en compte, pas tes interactions", correct: false },
+      { text: "Tes connexions — LinkedIn se base sur le profil de tes abonnés pour définir ton autorité", correct: false },
+    ],
     e: "LinkedIn lit tes 1000 dernières interactions pour comprendre qui tu es et vers qui te distribuer. C'est pour ça que la régularité de ta routine compte autant.",
   },
   {
@@ -32,7 +39,12 @@ const ALL_QUESTIONS = [
   {
     type: 'qcm',
     q: "Commenter sous le post d'un concurrent qui s'adresse à ta même cible peut te générer des leads parce que :",
-    opts: ["LinkedIn te recommande automatiquement à ses abonnés", "Sa communauté est potentiellement ta cible — un commentaire pertinent génère des visites de profil", "Ça augmente ta fréquence de publication perçue", "Tu apparais dans les suggestions d'abonnement"], c: 1,
+    opts: [
+      { text: "LinkedIn te recommande automatiquement à ses abonnés dès que tu interagis régulièrement avec son contenu", correct: false },
+      { text: "Sa communauté est potentiellement ta cible — un commentaire pertinent pousse les lecteurs à visiter ton profil", correct: true },
+      { text: "Ça augmente ta fréquence de publication perçue, ce qui améliore ta portée globale sur la plateforme", correct: false },
+      { text: "Tu apparais dans les suggestions d'abonnement des personnes qui suivent ton concurrent", correct: false },
+    ],
     e: "Si ton concurrent a la même cible que toi, sa communauté c'est potentiellement tes prospects. Un commentaire pertinent les pousse à cliquer sur ton profil — et c'est là que la magie opère.",
   },
   {
@@ -44,13 +56,23 @@ const ALL_QUESTIONS = [
   {
     type: 'qcm',
     q: "Pourquoi bloquer un créneau fixe chaque jour pour sa routine d'engagement ?",
-    opts: ["Pour maximiser la portée de tes posts", "Pour ancrer l'habitude et être régulier dans ses interactions", "Parce que l'algorithme favorise les interactions matinales", "Pour éviter une pénalité de fréquence"], c: 1,
+    opts: [
+      { text: "Pour maximiser la portée de tes posts — l'algo favorise les comptes qui interagissent juste avant de publier", correct: false },
+      { text: "Pour ancrer l'habitude et être régulier — un créneau fixe transforme la routine en automatisme et garantit la constance", correct: true },
+      { text: "Parce que l'algorithme favorise les interactions matinales — les commentaires du matin ont plus de poids que ceux du soir", correct: false },
+      { text: "Pour éviter une pénalité de fréquence — LinkedIn limite les interactions si elles ne sont pas réparties régulièrement", correct: false },
+    ],
     e: "Un créneau fixe, c'est ce qui transforme la routine en automatisme. Thomas le fait chaque matin avec son café — 15-20 minutes et la journée peut commencer.",
   },
   {
     type: 'qcm',
     q: "Quelles sont les 4 thématiques de listes à construire en priorité dans sa routine d'engagement ?",
-    opts: ["Concurrents, médias, influenceurs, clients", "Concurrents, prestataires à audience similaire, top of mind, prospects", "Clients, partenaires, médias, top of mind", "Prospects, clients, concurrents, partenaires"], c: 1,
+    opts: [
+      { text: "Concurrents, médias, influenceurs, clients — pour couvrir toutes les sources de visibilité disponibles", correct: false },
+      { text: "Concurrents, prestataires à audience similaire, top of mind, prospects — chaque liste a un objectif précis et complémentaire", correct: true },
+      { text: "Clients, partenaires, médias, top of mind — pour construire une présence autour de son réseau existant", correct: false },
+      { text: "Prospects, clients, concurrents, partenaires — pour mixer acquisition et fidélisation dans la même routine", correct: false },
+    ],
     e: "Concurrents pour voler de la notoriété, prestataires à audience similaire pour toucher ta cible indirectement, top of mind pour la visibilité, et prospects pour chauffer les contacts avant de les démarcher.",
   },
   {
@@ -62,7 +84,12 @@ const ALL_QUESTIONS = [
   {
     type: 'qcm',
     q: "Quel niveau d'engagement minimum est recommandé pour qu'un profil vaille la peine d'être dans ta liste de visibilité ?",
-    opts: ["Entre 0 et 15 likes par post", "Entre 15 et 30 likes par post minimum", "Plus de 100 likes par post obligatoirement", "Le nombre de likes ne compte pas, seule la fréquence de publication compte"], c: 1,
+    opts: [
+      { text: "Entre 0 et 15 likes par post — même avec peu d'engagement, la régularité de publication suffit pour justifier sa présence dans la liste", correct: false },
+      { text: "Entre 15 et 30 likes par post minimum — en dessous, la portée est trop faible pour que ton commentaire soit vraiment vu", correct: true },
+      { text: "Plus de 100 likes par post obligatoirement — seuls les gros comptes garantissent une visibilité réelle sur tes commentaires", correct: false },
+      { text: "Le nombre de likes ne compte pas — seule la fréquence de publication et la thématique du profil sont des critères pertinents", correct: false },
+    ],
     e: "En dessous de 15-30 likes par post, la portée est trop faible pour que ton commentaire soit vraiment vu. Sauf si le profil est ultra qualifié et que son audience colle parfaitement à ta cible.",
   },
   {
@@ -74,7 +101,12 @@ const ALL_QUESTIONS = [
   {
     type: 'qcm',
     q: "Quelle est la bonne approche avant d'envoyer un DM à un prospect que tu ne connais pas encore ?",
-    opts: ["Envoyer une demande de connexion avec une note personnalisée directement", "Commenter ses posts pendant quelques jours, puis le contacter en DM — tu n'es plus un inconnu", "Liker tous ses posts puis envoyer un message automatisé", "Attendre qu'il interagisse avec ton contenu en premier"], c: 1,
+    opts: [
+      { text: "Envoyer directement une demande de connexion avec une note personnalisée — c'est la méthode la plus rapide pour entrer en contact", correct: false },
+      { text: "Commenter ses posts pendant quelques jours, puis le contacter en DM — tu n'es plus un inconnu et le taux de réponse est bien meilleur", correct: true },
+      { text: "Liker l'ensemble de ses posts récents puis envoyer un message automatisé — la combinaison like + message maximise la visibilité", correct: false },
+      { text: "Attendre qu'il interagisse avec ton contenu en premier — ça prouve qu'il est déjà intéressé et garantit une meilleure réception", correct: false },
+    ],
     e: "Commenter ses posts en amont te rend familier avant le premier contact. Quand tu envoies ton DM, tu n'es plus un inconnu — et parfois, c'est même lui qui vient vers toi en premier.",
   },
   {
@@ -86,7 +118,12 @@ const ALL_QUESTIONS = [
   {
     type: 'qcm',
     q: "Quel est le principal avantage de LinkHub.gg pour ta routine d'engagement ?",
-    opts: ["Il publie tes posts automatiquement au meilleur moment", "Il organise tes listes et coupe automatiquement les posts de plus de 24h pour ne pas perdre de temps", "Il analyse tes stats LinkedIn en temps réel", "Il envoie des demandes de connexion à ta place"], c: 1,
+    opts: [
+      { text: "Il publie tes posts automatiquement au meilleur moment — il analyse ton audience pour optimiser l'heure de diffusion", correct: false },
+      { text: "Il organise tes listes et filtre automatiquement les posts de plus de 24h — ce qui rend la routine rapide et sans scroll inutile", correct: true },
+      { text: "Il analyse tes statistiques LinkedIn en temps réel — tu peux suivre l'impact de chaque commentaire sur ta portée globale", correct: false },
+      { text: "Il envoie des demandes de connexion automatiques selon les critères de ta cible — pour automatiser entièrement l'acquisition", correct: false },
+    ],
     e: "LinkHub.gg te fait un zoom sur les posts récents et t'évite le scroll infini. Dès qu'un post dépasse 24h, il te dit de passer à la liste suivante — ce qui rend la routine rapide et efficace.",
   },
   {
@@ -98,7 +135,12 @@ const ALL_QUESTIONS = [
   {
     type: 'qcm',
     q: "Parmi ces commentaires, lequel apporte vraiment quelque chose ?",
-    opts: ["Super post, totalement d'accord !", "Merci pour le partage, très inspirant.", "Je nuancerai sur ce point : j'ai vécu l'inverse chez mes clients, voici pourquoi...", "Intéressant."], c: 2,
+    opts: [
+      { text: "Super post, totalement d'accord avec tout ce que tu dis — continue comme ça !", correct: false },
+      { text: "Merci pour le partage, c'est vraiment très inspirant et pertinent pour ma situation actuelle.", correct: false },
+      { text: "Je nuancerai sur ce point : j'ai vécu l'inverse chez mes clients. Voici ce que j'ai observé concrètement...", correct: true },
+      { text: "Intéressant. Je n'avais pas envisagé les choses sous cet angle-là, merci pour cette perspective.", correct: false },
+    ],
     e: "Un commentaire qui apporte un point de vue, une expérience ou un contre-argument pousse les gens à cliquer sur ton profil. Les 3 autres ne t'apportent ni visibilité ni crédibilité.",
   },
   {
@@ -110,7 +152,12 @@ const ALL_QUESTIONS = [
   {
     type: 'qcm',
     q: "Pourquoi est-il recommandé de faire ses premiers commentaires manuellement avant de laisser l'IA de LinkHub.gg prendre le relais ?",
-    opts: ["Parce que l'IA de LinkHub.gg ne fonctionne pas correctement", "Parce que l'IA apprend de tes propres commentaires pour reproduire ton ton de voix", "Parce que LinkedIn pénalise les commentaires générés par IA", "Pour respecter les CGU de LinkedIn"], c: 1,
+    opts: [
+      { text: "Parce que l'IA de LinkHub.gg ne fonctionne pas correctement au démarrage — elle a besoin d'une période de calibration technique", correct: false },
+      { text: "Parce que l'IA apprend de tes propres commentaires pour reproduire ton ton de voix — sans base, elle génère des commentaires génériques", correct: true },
+      { text: "Parce que LinkedIn pénalise les commentaires générés par IA — les publier manuellement au départ évite une restriction de compte", correct: false },
+      { text: "Pour respecter les CGU de LinkedIn — la plateforme interdit l'automatisation des commentaires dans ses conditions d'utilisation", correct: false },
+    ],
     e: "L'IA de LinkHub.gg s'entraîne sur tes commentaires existants. Si tu commences par des commentaires manuels avec ta vraie patte, l'IA va s'en approcher beaucoup mieux ensuite.",
   },
   {
@@ -122,7 +169,12 @@ const ALL_QUESTIONS = [
   {
     type: 'qcm',
     q: "Pour construire ta liste 'audience similaire', quelle est la méthode recommandée ?",
-    opts: ["Chercher des profils au hasard dans ta niche", "Regarder avec quels créateurs tes clients existants interagissent pour identifier les thématiques qu'ils suivent", "Copier les listes de tes concurrents", "Utiliser uniquement la barre de recherche LinkedIn"], c: 1,
+    opts: [
+      { text: "Chercher des profils au hasard dans ta niche via la barre de recherche LinkedIn et les ajouter sans critère particulier", correct: false },
+      { text: "Regarder avec quels créateurs tes clients existants interagissent — ça révèle les thématiques qu'ils suivent vraiment", correct: true },
+      { text: "Copier directement les listes de tes concurrents — si ça marche pour eux, ça marchera probablement pour toi aussi", correct: false },
+      { text: "Utiliser uniquement la barre de recherche LinkedIn avec des mots-clés liés à ta niche pour trouver des profils pertinents", correct: false },
+    ],
     e: "Tes clients actuels te donnent la meilleure info : regarde avec qui ils interagissent, identifie les thématiques récurrentes, et construis tes listes autour de ça.",
   },
 ]
@@ -134,6 +186,20 @@ function shuffle(arr) {
     ;[a[i], a[j]] = [a[j], a[i]]
   }
   return a
+}
+
+// Pour les QCM : shuffler les options et garder trace de la bonne réponse
+function prepareQuestions(questions) {
+  return shuffle(questions).map(q => {
+    if (q.type === 'vf') return q
+    const shuffled = shuffle(q.opts)
+    const correctIndex = shuffled.findIndex(o => o.correct)
+    return {
+      ...q,
+      opts: shuffled.map(o => o.text),
+      c: correctIndex,
+    }
+  })
 }
 
 function getScoreMsg(score, total) {
@@ -357,7 +423,7 @@ export default function Quiz() {
   const [screen, setScreen] = useState('home')
   const [participant, setParticipant] = useState({ name: '', email: '' })
   const [finalResults, setFinalResults] = useState([])
-  const [questions] = useState(() => shuffle(ALL_QUESTIONS))
+  const [questions] = useState(() => prepareQuestions(ALL_QUESTIONS))
 
   function handleStart(name, email) {
     setParticipant({ name, email })
